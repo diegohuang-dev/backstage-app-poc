@@ -1,0 +1,51 @@
+app:
+  # Should be the same as backend.baseUrl when using the 'app-backend' plugin.
+  baseUrl: http://localhost:7007
+
+backend:
+  # Note that the baseUrl should be the URL that the browser and other clients
+  # should use when communicating with the backend, i.e. it needs to be
+  # reachable not just from within the backend host, but from all of your
+  # callers. When its value is "http://localhost:7007", it's strictly private
+  # and can't be reached by others.
+  baseUrl: http://localhost:7007
+  # The listener can also be expressed as a single <host>:<port> string. In this case we bind to
+  # all interfaces, the most permissive setting. The right value depends on your specific deployment.
+  listen:
+    port: ${PORT}
+    host: 0.0.0.0
+
+  # config options: https://node-postgres.com/apis/client
+  database:
+    client: pg
+    connection:
+      host: ${POSTGRES_HOST}
+      port: ${POSTGRES_PORT}
+      user: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+      database: ${POSTGRES_DB}
+      ssl:
+        rejectUnauthorized: false # Render Postgres usually requires SSL, but often with self-signed certs or similar in internal networks.
+
+auth:
+  providers:
+    guest: {}
+
+catalog:
+  locations:
+    # Local example data, replace this with your production config, these are intended for demo use only.
+    # File locations are relative to the backend process, typically in a deployed context, such as in a Docker container, this will be the root
+    - type: file
+      target: ./examples/entities.yaml
+
+    # Local example template
+    - type: file
+      target: ./examples/template/template.yaml
+      rules:
+        - allow: [Template]
+
+    # Local example organizational data
+    - type: file
+      target: ./examples/org.yaml
+      rules:
+        - allow: [User, Group]

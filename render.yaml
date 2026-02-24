@@ -1,0 +1,39 @@
+services:
+  - type: web
+    name: backstage-app
+    runtime: docker
+    plan: starter
+    dockerContext: .
+    dockerfilePath: packages/backend/Dockerfile
+    envVars:
+      - key: POSTGRES_HOST
+        fromService:
+          type: psql
+          name: backstage-db
+          property: host
+      - key: POSTGRES_PORT
+        fromService:
+          type: psql
+          name: backstage-db
+          property: port
+      - key: POSTGRES_USER
+        fromService:
+          type: psql
+          name: backstage-db
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromService:
+          type: psql
+          name: backstage-db
+          property: password
+      - key: POSTGRES_DB
+        fromService:
+          type: psql
+          name: backstage-db
+          property: database
+
+databases:
+  - name: backstage-db
+    plan: starter
+    databaseName: backstage_db
+    user: backstage_user
